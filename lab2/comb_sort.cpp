@@ -20,35 +20,32 @@ void bubble_step(int (&a)[], int step, int N) {
 }
 
 
-void combSort(int (&a)[], int step, int N) {
-    bubble_step(a, step, N);
-    bubble_step(a, 1, N);
+void combSort(int (&a)[], int step, int actual_size) {
+   // bubble_step(a, step, actual_size);
+    bubble_step(a, 1, actual_size);
 }
 
 
-int time_measure(int (&a)[], int multiplier, int N) {
-    int sum = 0;
-    for (int i = 0; i < 5; i++)
-    {
-        auto begin = std::chrono::steady_clock::now();
-        for (int i = 1; i < multiplier; i++) combSort(a, 4, N);
-        auto end = std::chrono::steady_clock::now();
-        auto time_span = 
-        std::chrono::duration_cast <std::chrono::milliseconds>(end - begin);
-        sum += time_span.count();
-    }
-    return sum / 5;
+int time_measure(int (&a)[], int step, int multiplier, int actual_size) { 
+    auto begin = std::chrono::steady_clock::now();
+    for(int cnt = multiplier; cnt != 0 ; --cnt)
+        combSort(a, step , actual_size);
+    auto end = std::chrono::steady_clock::now();
+    auto time_span =
+    std::chrono::duration_cast<std::chrono::microseconds>(end - begin);
+    return time_span.count()/multiplier;
     
 }
 
 
 int main() {
-    for (int N = 100; N < 5000; N+=100)
-    {
-        int a[N] = {0};
-        for (int i = 0; i < N; i++){
-            a[i] = random_number(N);
+    int N = 5000;
+    int a[N]={0};
+    for (int n = 100; n < N; n+=100){
+        
+        for (int i = 0; i < n; i++){
+            a[i] = random_number(n);
         }
-        std::cout << time_measure(a, 15, N) << '\n';  
+        std::cout <<  time_measure(a, 4, 100, n) << std::endl;  
     }
 }

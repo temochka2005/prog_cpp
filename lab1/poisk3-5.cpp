@@ -5,25 +5,23 @@
 unsigned seed = 1000-7;
 std::default_random_engine rng(seed);
 
-int random_number_in_array(int a[], int N) {
-    std::uniform_int_distribution<unsigned> dstr(0 , N);
+int random_number_in_array(int a[], int actual_size) {
+    std::uniform_int_distribution<unsigned> dstr(0 , actual_size);
     return a[dstr(rng)];
 }
 
-int lin_search(int a[], int number, int N){
-    for (int i = 0; i < N; i++){
+int lin_search(int a[], int number, int actual_size){
+    for (int i = 0; i < actual_size; i++){
         if (a[i] == number){
             return i;
         }
-        if ( (a[i] != number) and (i = N - 1) ){
-            return -1;
-        }
     }
+    return -1;
 }
 
-int bin_search(int a[], int number, int N){
+int bin_search(int a[], int number, int actual_size){
     int left = -1;
-    int right = N - 1;
+    int right = actual_size - 1;
     while (left + 1 < right)
     {
         int mid = (left + right) / 2;
@@ -33,37 +31,35 @@ int bin_search(int a[], int number, int N){
             right = mid;
         } 
     }
-    if (left > -1 && a[left] == number) {
+    if ( (left > -1) and (a[left] == number) ) {
         return left;
-    } else {
-        return -1;
-    }
+    }      
+    return -1;
 }
 
 
-int time_measure(int a[], int number, int multiplier, int N) {
-    int sum = 0;
-    for (int i = 0; i <5; i++)
-    {
-        auto begin = std::chrono::steady_clock::now();
-        for (int i = 1; i < multiplier; i++) lin_search(a, number, N);
-        auto end = std::chrono::steady_clock::now();
-        auto time_span = 
-        std::chrono::duration_cast <std::chrono::milliseconds>(end - begin);
-        sum += time_span.count();
-    }
-    return sum / 5;
+int time_measure(int a[], int number, int multiplier, int actual_size) { 
+    auto begin = std::chrono::steady_clock::now();
+    for(int cnt = multiplier; cnt != 0 ; --cnt)
+        lin_search(a, number, actual_size);
+    auto end = std::chrono::steady_clock::now();
+    auto time_span =
+    std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    return time_span.count()/multiplier;
     
 }
 
-int main() { 
-    for (int N = 512; N < 1000000; N*=2){
-        int a[N];
-        for (int i = 0; i < N; i++){
+int main() {
+    int N = 100000;
+    int a[N]={0};
+    for (int n = 512; n < N; n*=2){
+        
+        for (int i = 0; i < n; i++){
             a[i] = i;
         }
-        int number = N;
-        std::cout << time_measure(a, number, 10000, N) << '\n';  
+    
+        int number = random_number_in_array(a,n);
+        std::cout <<  time_measure(a, number, 1000, n) << std::endl;  
     }
 
 }
