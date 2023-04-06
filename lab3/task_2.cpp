@@ -40,7 +40,7 @@ int main()
             {
         
                 if (!dis[i].stop){
-                    int direction = dir(rng), dx = 0, dy = 0;
+                    int direction = dir(rng);
                     if (direction == 1) dis[i].dx = -1;
                     if (direction == 2) dis[i].dx = 1;
                     if (direction == 3) dis[i].dy = 1;
