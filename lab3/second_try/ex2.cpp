@@ -2,8 +2,8 @@
 #include <random>
 #include <iostream>
 
-const int crystal_size = 1000;
-const int disloc_count_max = crystal_size * crystal_size / 2;
+const int crystal_size = 10;
+const int disloc_count_max = crystal_size * crystal_size;
 
 
 int unsigned seed = 1000-7;
@@ -37,6 +37,9 @@ void randPosition(Dislocasions* dis, int disloc_count)
     for (int i = 0; i < disloc_count; i++){
         dis[i].x = dstr(rng);
         dis[i].y = dstr(rng);
+        dis[i].dx = 0;
+        dis[i].dy = 0;
+        dis[i].stop = false;
     }
 }
 
@@ -82,14 +85,13 @@ void Step(Dislocasions* dis, int disloc_count, int &counter, bool &finished)
 int main()
 {
     std::ofstream f("F:/progaCPP/lab3/second_try/ex2reworked.txt", std::ios::out);
-    // int disloc_count = disloc_count_max;
-    int disloc_count = 2;
+    int disloc_count = disloc_count_max;
 
     while (disloc_count > 0)
     {
         Dislocasions* dis = new Dislocasions[disloc_count];
         int counter = 0;
-        for (int i = 0; i < 2   ; ++i)
+        for (int i = 0; i < 100; ++i)
         {
             randPosition(dis, disloc_count);
             bool finished = false;
@@ -100,7 +102,7 @@ int main()
             }
             std::cout << "Out of while {Step} OK " << std::endl;
         }
-        f<< counter <<  " " << static_cast<float>(disloc_count)  << std::endl;
+        f<< static_cast<float>(disloc_count)/ static_cast<float>(crystal_size*crystal_size)  <<  " " <<  counter / 100  << std::endl;
         std::cout << "printed txt" << std::endl;
         disloc_count--;
         delete dis;
